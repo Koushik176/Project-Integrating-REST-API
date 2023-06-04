@@ -16,7 +16,7 @@ function saveToLocalStorage(e) {
         quantity,
     }
 
-    axios.post("https://crudcrud.com/api/1f5008b8f62446e9ad57c29ab90d7b8f/stockData", obj)
+    axios.post("https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData", obj)
         .then((Response) => {
             showUserOnScreen(Response.data);
         })
@@ -37,7 +37,7 @@ function showUserOnScreen(obj) {
     buy1Button.className = 'btn btn-primary';
     buy1Button.value = 'Buy1';
     buy1Button.onclick = () => {
-        axios.put(`https://crudcrud.com/api/1f5008b8f62446e9ad57c29ab90d7b8f/stockData/${obj._id}`,
+        axios.put(`https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData/${obj._id}`,
         {
             candyName:obj.candyName,
             description:obj.description,
@@ -45,21 +45,25 @@ function showUserOnScreen(obj) {
             quantity:obj.quantity - 1,
         })
             .then((response) => {
-                console.log(response);
-                while (parentElem.firstChild) {
-                    parentElem.removeChild(parentElem.firstChild);
+                if(obj.quantity < 1){
+                    alert(`${obj.candyName} stock sold out`);
+                }else{
+                    console.log(response);
+                    while (parentElem.firstChild) {
+                        parentElem.removeChild(parentElem.firstChild);
+                    }
+                    //parentElem.removeChild(childElem);
+                    axios.get("https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData")
+                    .then((response) => {
+                        for(var i = 0; i< response.data.length; i++)
+                        {
+                            showUserOnScreen(response.data[i]);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
                 }
-                //parentElem.removeChild(childElem);
-                axios.get("https://crudcrud.com/api/1f5008b8f62446e9ad57c29ab90d7b8f/stockData")
-        .then((response) => {
-            for(var i = 0; i< response.data.length; i++)
-            {
-                showUserOnScreen(response.data[i]);
-            }
-        })
-        .catch((err) => {
-            console.log(err)
-        })
             })
             .catch((err) => {
                 console.log("Stock sold Out");
@@ -73,7 +77,7 @@ function showUserOnScreen(obj) {
     buy2Button.className = 'btn btn-primary';
     buy2Button.value = 'Buy2';
     buy2Button.onclick = () => {
-        axios.put(`https://crudcrud.com/api/1f5008b8f62446e9ad57c29ab90d7b8f/stockData/${obj._id}`,
+        axios.put(`https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData/${obj._id}`,
         {
             candyName:obj.candyName,
             description:obj.description,
@@ -86,7 +90,7 @@ function showUserOnScreen(obj) {
                     parentElem.removeChild(parentElem.firstChild);
                 }
                 //parentElem.removeChild(childElem);
-                axios.get("https://crudcrud.com/api/1f5008b8f62446e9ad57c29ab90d7b8f/stockData")
+                axios.get("https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData")
         .then((response) => {
             for(var i = 0; i< response.data.length; i++)
             {
@@ -109,7 +113,7 @@ function showUserOnScreen(obj) {
     buy3Button.className = 'btn btn-primary';
     buy3Button.value = 'Buy3';
     buy3Button.onclick = () => {
-        axios.put(`https://crudcrud.com/api/1f5008b8f62446e9ad57c29ab90d7b8f/stockData/${obj._id}`,
+        axios.put(`https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData/${obj._id}`,
         {
             candyName:obj.candyName,
             description:obj.description,
@@ -122,7 +126,7 @@ function showUserOnScreen(obj) {
                     parentElem.removeChild(parentElem.firstChild);
                 }
                 //parentElem.removeChild(childElem);
-                axios.get("https://crudcrud.com/api/1f5008b8f62446e9ad57c29ab90d7b8f/stockData")
+                axios.get("https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData")
         .then((response) => {
             for(var i = 0; i< response.data.length; i++)
             {
@@ -134,16 +138,32 @@ function showUserOnScreen(obj) {
         })
             })
             .catch((err) => {
+                alert(`${obj.candyName} stock sold out`);
                 console.log("Stock sold Out");
             })
         
     }
     childElem.appendChild(buy3Button);
     parentElem.appendChild(childElem);
+    const deleteButton = document.createElement('input');
+    deleteButton.type = 'button';
+    deleteButton.className = 'btn btn-primary';
+    deleteButton.value = 'Delete';
+    deleteButton.onclick = () => {
+        axios.delete(`https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData/${obj._id}`)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        parentElem.removeChild(childElem);
+    }
+    childElem.appendChild(deleteButton);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    axios.get("https://crudcrud.com/api/1f5008b8f62446e9ad57c29ab90d7b8f/stockData")
+    axios.get("https://crudcrud.com/api/fd07a995350c49c09b4f984de7270ffe/stockData")
         .then((response) => {
             for(var i = 0; i< response.data.length; i++)
             {
